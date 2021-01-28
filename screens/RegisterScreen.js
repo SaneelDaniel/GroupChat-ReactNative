@@ -1,14 +1,43 @@
-import React, { useLayoutEffect, useState } from "react";
-import { StyleSheet, View, KeyboardAvoidingView } from "react-native";
+import React, { useLayoutEffect, useState, useEffect } from "react";
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Button, Input, Image, Text } from "react-native-elements";
 import { auth } from "../firebase";
+import * as ImagePicker from "expo-image-picker";
 
 const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        const {
+          status,
+        } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImageUrl(result.uri);
+    }
+  };
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -19,7 +48,13 @@ const RegisterScreen = ({ navigation }) => {
   const register = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
-      .then((authUser) => {})
+      .then((authUser) => {
+        let user = authUser.user;
+        user.updateProfile({
+          displayName: name,
+          photoURL: imageUrl || "https://example.com/jane-q-user/profile.jpg",
+        });
+      })
       .catch((error) => alert(error.message));
   };
 
@@ -50,14 +85,12 @@ const RegisterScreen = ({ navigation }) => {
           value={password}
           onChangeText={(text) => setPassword(text)}
         />
-        <Input
-          placeholder="Image Url"
-          type="text"
-          value={imageUrl}
-          onChangeText={(text) => setImageUrl(text)}
-          onSubmitEditing={register}
-        />
       </View>
+      <Button
+        containerStyle={styles.button}
+        title="Pick a Profile Picture"
+        onPress={pickImage}
+      />
       <Button
         containerStyle={styles.button}
         raised
