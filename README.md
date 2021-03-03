@@ -9,25 +9,25 @@
 
 (The client side register-page)
 
-![register-page-image](images/sc-registerscreen.png)
+![register-page-image](images/sc-registerscreen.PNG)
 
 ### Home Page
 
-![homepage](images/sc-authuserhome.png)
+![homepage](images/sc-authuserhome.PNG)
 
 ### Add new Chat Screen
 
-![addchat-screen](images/sc-addnewchatscreen.png)
+![addchat-screen](images/sc-addnewchatscreen.PNG)
 
 ### Chat screen
 
 (User 1)
 
-![chat-screen](images/sc-chatscreenuser1.png)
+![chat-screen](images/sc-chatscreenuser1.PNG)
 
 (User 2)
 
-![chat-screen2](images/sc-chatscreenuser2.png)
+![chat-screen2](images/sc-chatscreenuser2.PNG)
 
 # Getting Started with Create React App and Running the project Locally
 
